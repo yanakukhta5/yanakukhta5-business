@@ -20,7 +20,7 @@ export default {
   text-transform: capitalize;
   background-color: $primary;
   color: #fff;
-  border: none;
+  border: 1px solid $primary;
   border-radius: 4px;
   padding: 10px 15px;
   cursor: pointer;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Dropdown from './components/Dropdown/index.vue'
-import Output from './components/Output/index.vue'
-import Button from './components/Button/index.vue'
+import Dropdown from '@/components/Dropdown/index.vue'
+import Output from '@/components/Output/index.vue'
+import Button from '@/components/Button/index.vue'
 </script>
 
 <template>

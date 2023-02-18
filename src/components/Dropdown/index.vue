@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mapActions } from "pinia";
-import store from "../../store";
+import store from "@/store/index";
 export default {
   props: {
     options: Array<String>,
