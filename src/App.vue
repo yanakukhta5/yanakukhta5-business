@@ -5,14 +5,10 @@ import Button from '@/components/Button/index.vue'
 
 import axios from 'axios';
 
-const url = 'https://test.gnzs.ru/oauth/get-token.php'
-     const headers = {
-       "X-Client-Id": 30878566
-      }
+const url = 'http://127.0.0.1:1234/api'
      axios({
       method: 'get',
-      url,
-      headers
+      url
      }).then(response => {
       console.log(response)
      })
