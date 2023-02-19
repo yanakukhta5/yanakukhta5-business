@@ -1,8 +1,7 @@
 <script lang="ts">
-import { mapState } from 'pinia';
+import { mapState } from 'pinia'
 
-import store from '@/store';
-
+import store from '@/store'
  export default{
   computed: mapState(store, ['responses'])
  }

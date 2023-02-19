@@ -10,6 +10,7 @@ export default {
   data() {
     return {
       current: "",
+      currentKey: 0
     } 
   },
 
@@ -55,9 +56,7 @@ export default {
 
     inputListener(event: Event) {
       this.changeOptionChosen(true) 
-      this.current = (
-        event.target as HTMLInputElement
-      )?.value.toLocaleLowerCase() 
+      this.current = (event.target as HTMLInputElement)?.value.toLocaleLowerCase() 
     },
 
     defaultListener() {
@@ -65,18 +64,16 @@ export default {
     },
 
     labelListener(event: MouseEvent) {
-      (this.$refs.title as HTMLDivElement).textContent = ( event.target as HTMLDivElement )?.textContent,
+      (this.$refs.title as HTMLDivElement).textContent = (event.target as HTMLDivElement)?.textContent,
       (this.$refs.selectSingle as HTMLDivElement).setAttribute("data-state", "") 
     },
 
-    async formSubmit(event: Event) {
+    async formSubmit() {
       this.changeIsCreating(true) 
-      const service =
-        this.current === "сделка" ? lead : this.current === "контакт" ? contact : company 
+      const service = this.current === "сделка" ? lead : this.current === "контакт" ? contact : company 
       const answer = await service.create(this.access_token)
       this.changeResponses([{id: answer[0].id, name: this.capitalizeFirstLetter(this.current)}, ...this.responses]),
-      this.changeOptionChosen(false) 
-      this.changeIsCreating(false) 
+      this.changeIsCreating(false)
     },
   },
 
@@ -102,14 +99,8 @@ export default {
       (this.$refs.input as Array<HTMLInputElement>).forEach((input) => {
         input.removeEventListener("click", this.inputListener) 
       }),
-      (this.$refs.title as HTMLDivElement).removeEventListener(
-        "click",
-        this.titleListener
-      ),
-      (this.$refs.default as HTMLInputElement).removeEventListener(
-        "click",
-        this.defaultListener
-      ) 
+      (this.$refs.title as HTMLDivElement).removeEventListener("click", this.titleListener),
+      (this.$refs.default as HTMLInputElement).removeEventListener("click", this.defaultListener) 
   },
 } 
 </script>

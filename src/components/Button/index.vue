@@ -2,7 +2,7 @@
 import { mapState } from "pinia";
 import store from "@/store/index.js";
 export default {
-  computed: mapState(store, ["isOptionChosen", "isCreating"]),
+  computed: mapState(store, ["isOptionChosen", "isCreating"])
 };
 </script>
 
