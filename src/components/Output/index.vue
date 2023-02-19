@@ -5,14 +5,15 @@
 </script>
 
 <template>
- <p class="title">Область отображения результатов POST-запрос на API amoCRM: </p>
- <output class="output" name="results"></output>
+ <div class="wrapper">
+  <p class="title">Область отображения результатов POST-запросов на API amoCRM: </p>
+  <output class="output" name="results"></output>
+ </div>
 </template>
 
 <style scoped lang="scss">
 .output {
  display: block;
- width: clamp(320px, 50%, 500px);
  padding: 10px;
  min-height: 420px;
  border: 1px solid $secondary;
@@ -20,5 +21,6 @@
 }
 .title {
  margin: 0;
+ font-size: 1.3em;
 }
 </style>

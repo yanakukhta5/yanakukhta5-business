@@ -1,10 +1,33 @@
 <script lang="ts">
-import { mapActions } from "pinia";
+import { mapActions, mapState } from "pinia";
 import store from "@/store/index";
+
+import contacts from "@/server/contacts";
+
 export default {
+  data(){
+    return {
+      current: ''
+    }
+  },
+
   props: {
     options: Array<String>,
     default: String,
+  },
+
+  computed: {
+    ...mapState(store, ['access_token']),
+
+    defaultCapitalize() {
+      return this.capitalizeFirstLetter(this.default as string);
+    },
+
+    optionsCapitalize() {
+      return this.options?.map((item) =>
+        this.capitalizeFirstLetter(item as string)
+      );
+    },
   },
 
   methods: {
@@ -17,7 +40,7 @@ export default {
     },
 
     capitalizeFirstLetter(string: string) {
-      return string.charAt(0).toUpperCase() + string.slice(1);
+      return string.trim().charAt(0).toUpperCase() + string.slice(1);
     },
 
     titleListener(){
@@ -29,8 +52,9 @@ export default {
       }
     },
 
-    inputListener(){
+    inputListener(event:Event){
       this.changeOptionChosen(true)
+      this.current = (event.target as HTMLInputElement)?.id.toLocaleLowerCase()
     },
 
     defaultListener(){
@@ -40,19 +64,24 @@ export default {
     labelListener(event: MouseEvent){
       (this.$refs.title as HTMLDivElement).textContent = (event.target as HTMLDivElement)?.textContent;
       (this.$refs.selectSingle as HTMLDivElement).setAttribute("data-state", "");
+    },
+
+    formSubmit(event: Event){
+      switch (this.current) {
+        case 'сделка':
+          
+          break;
+          case 'контакт':
+           contacts.create(this.access_token)
+          break;
+          case 'компания':
+          
+          break;   
+        default:
+          return
+      }
+      this.changeOptionChosen(false)
     }
-  },
-
-  computed: {
-    defaultCapitalize() {
-      return this.capitalizeFirstLetter(this.default as string);
-    },
-
-    optionsCapitalize() {
-      return this.options?.map((item) =>
-        this.capitalizeFirstLetter(item as string)
-      );
-    },
   },
 
   mounted() {
@@ -87,7 +116,7 @@ export default {
 </script>
 
 <template>
-  <form>
+  <form @submit.prevent="formSubmit" class="form">
     <div class="select" data-state="" ref="selectSingle">
       <div class="select__title" ref="title"></div>
       <div class="select__content">
@@ -124,10 +153,17 @@ export default {
         </template>
       </div>
     </div>
+    <slot />
   </form>
 </template>
 
 <style scoped lang="scss">
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
 *,
 *::before,
 *::after {

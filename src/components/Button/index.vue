@@ -9,20 +9,21 @@ export default {
 <template>
   <button
     :class="[{ button__disabled: !isOptionChosen }, 'button']"
-    :disabled="isOptionChosen"
+    :disabled="!isOptionChosen"
   >
-    <slot></slot>
+    <slot />
   </button>
 </template>
 
 <style scoped lang="scss">
 .button {
+  width: fit-content;
   text-transform: capitalize;
   background-color: $primary;
   color: #fff;
   border: 1px solid $primary;
   border-radius: 4px;
-  padding: 10px 15px;
+  padding: 10px 20px;
   cursor: pointer;
   &__disabled {
     background-color: #ffffff;

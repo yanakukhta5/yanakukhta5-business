@@ -1,25 +1,40 @@
-<script setup lang="ts">
+<script lang="ts">
+import { mapActions } from 'pinia';
+
+import store from './store';
+
 import Dropdown from '@/components/Dropdown/index.vue'
 import Output from '@/components/Output/index.vue'
 import Button from '@/components/Button/index.vue'
 
-import axios from 'axios';
+export default {
+ components: {
+  Dropdown, Output, Button
+ },
+ methods: mapActions(store, ["getApi"]),
+ mounted(){
+  this.getApi()
+ }
+}
 
-const url = 'http://127.0.0.1:1234/api'
-     axios({
-      method: 'get',
-      url
-     }).then(response => {
-      console.log(response)
-     })
 </script>
 
 <template>
-<Dropdown :options="['сделка', 'контракт', 'компания']" default="не выбрано" />
-<Button>создать</Button>
+ <div class="_container">
+<Dropdown :options="['сделка', 'контакт', 'компания']" default="не выбрано">
+ <Button>создать</Button>
+</Dropdown>
+
 <Output />
+</div>
 </template>
 
 <style scoped lang="scss">
-
+._container {
+ max-width: 1100px;
+ display: flex;
+ justify-content: space-between;
+ padding: 20px 0px;
+ margin: 0 auto;
+}
 </style>
