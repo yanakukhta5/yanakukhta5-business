@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mapState, mapActions } from "pinia";
-import store from "../../store/index.js";
+import store from "@/store/index.js";
 export default {
   computed: mapState(store, ["isOptionChosen"]),
 };
