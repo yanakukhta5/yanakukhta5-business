@@ -1,15 +1,15 @@
 <script lang="ts">
-import { mapState, mapActions } from "pinia";
+import { mapState } from "pinia";
 import store from "@/store/index.js";
 export default {
-  computed: mapState(store, ["isOptionChosen"]),
+  computed: mapState(store, ["isOptionChosen", "isCreating"]),
 };
 </script>
 
 <template>
   <button
-    :class="[{ button__disabled: !isOptionChosen }, 'button']"
-    :disabled="!isOptionChosen"
+    :class="[{ button__disabled: !isOptionChosen || isCreating }, 'button']"
+    :disabled="!isOptionChosen || isCreating"
   >
     <slot />
   </button>

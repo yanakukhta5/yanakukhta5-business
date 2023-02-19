@@ -26,7 +26,7 @@ export default defineConfig({
         }
       },
       '/full': {
-        target: 'https://' + 'd6757be6f1100' + '.amocrm.ru/api/v4/contacts',
+        target: 'https://' + 'd6757be6f1100' + '.amocrm.ru/api/v4',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/full/, ''),
         headers: {

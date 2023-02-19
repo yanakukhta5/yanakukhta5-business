@@ -1,14 +1,16 @@
 <script lang="ts">
-import { mapActions, mapState } from "pinia";
-import store from "@/store/index";
+import { mapActions, mapState } from "pinia" 
+import store from "@/store/index" 
 
-import contacts from "@/server/contacts";
+import contact from "@/services/contacts" 
+import lead from "@/services/leads" 
+import company from "@/services/companies" 
 
 export default {
-  data(){
+  data() {
     return {
-      current: ''
-    }
+      current: "",
+    } 
   },
 
   props: {
@@ -17,102 +19,99 @@ export default {
   },
 
   computed: {
-    ...mapState(store, ['access_token']),
+    ...mapState(store, [
+      "access_token",
+      "responses",
+      "isCreating",
+      "isOptionChosen",
+    ]),
 
     defaultCapitalize() {
-      return this.capitalizeFirstLetter(this.default as string);
+      return this.capitalizeFirstLetter(this.default as string) 
     },
 
     optionsCapitalize() {
       return this.options?.map((item) =>
         this.capitalizeFirstLetter(item as string)
-      );
+      ) 
     },
   },
 
   methods: {
-    ...mapActions(store, ["changeOptionChosen"]),
-
-    changeState(event: Event) {
-      if ((event.target as HTMLInputElement).value === this.default)
-        this.changeOptionChosen(false);
-      else this.changeOptionChosen(true);
-    },
+    ...mapActions(store, ["changeOptionChosen", "changeIsCreating", "changeResponses"]),
 
     capitalizeFirstLetter(string: string) {
-      return string.trim().charAt(0).toUpperCase() + string.slice(1);
+      return string.trim().charAt(0).toUpperCase() + string.slice(1) 
     },
 
-    titleListener(){
-      const selectSingle = this.$refs.selectSingle as HTMLDivElement;
+    titleListener() {
+      const selectSingle = this.$refs.selectSingle as HTMLDivElement 
       if ("active" === selectSingle.getAttribute("data-state")) {
-        selectSingle.setAttribute("data-state", "");
+        selectSingle.setAttribute("data-state", "") 
       } else {
-        selectSingle.setAttribute("data-state", "active");
+        selectSingle.setAttribute("data-state", "active") 
       }
     },
 
-    inputListener(event:Event){
-      this.changeOptionChosen(true)
-      this.current = (event.target as HTMLInputElement)?.id.toLocaleLowerCase()
+    inputListener(event: Event) {
+      this.changeOptionChosen(true) 
+      this.current = (
+        event.target as HTMLInputElement
+      )?.value.toLocaleLowerCase() 
     },
 
-    defaultListener(){
-      this.changeOptionChosen(false)
+    defaultListener() {
+      this.changeOptionChosen(false) 
     },
 
-    labelListener(event: MouseEvent){
-      (this.$refs.title as HTMLDivElement).textContent = (event.target as HTMLDivElement)?.textContent;
-      (this.$refs.selectSingle as HTMLDivElement).setAttribute("data-state", "");
+    labelListener(event: MouseEvent) {
+      (this.$refs.title as HTMLDivElement).textContent = ( event.target as HTMLDivElement )?.textContent,
+      (this.$refs.selectSingle as HTMLDivElement).setAttribute("data-state", "") 
     },
 
-    formSubmit(event: Event){
-      switch (this.current) {
-        case 'сделка':
-          
-          break;
-          case 'контакт':
-           contacts.create(this.access_token)
-          break;
-          case 'компания':
-          
-          break;   
-        default:
-          return
-      }
-      this.changeOptionChosen(false)
-    }
+    async formSubmit(event: Event) {
+      this.changeIsCreating(true) 
+      const service =
+        this.current === "сделка" ? lead : this.current === "контакт" ? contact : company 
+      const answer = await service.create(this.access_token)
+      this.changeResponses([{id: answer[0].id, name: this.capitalizeFirstLetter(this.current)}, ...this.responses]),
+      this.changeOptionChosen(false) 
+      this.changeIsCreating(false) 
+    },
   },
 
   mounted() {
-    const title = this.$refs.title as HTMLDivElement;
-    const labels = this.$refs.label as Array<HTMLLabelElement>;
-    const inputs = this.$refs.input as Array<HTMLInputElement>;
-    const defaultInput = this.$refs.default as HTMLInputElement
-    title.addEventListener("click", this.titleListener);
+    const title = this.$refs.title as HTMLDivElement 
+    const labels = this.$refs.label as Array<HTMLLabelElement> 
+    const inputs = this.$refs.input as Array<HTMLInputElement> 
+    const defaultInput = this.$refs.default as HTMLInputElement 
+    title.addEventListener("click", this.titleListener) 
     labels.forEach((label) => {
-      label.addEventListener("click", this.labelListener);
-    });
+      label.addEventListener("click", this.labelListener) 
+    }) 
     inputs.forEach((input) => {
-      input.addEventListener("click", this.inputListener);
-    });
-    defaultInput.addEventListener('click', this.defaultListener)
+      input.addEventListener("click", this.inputListener) 
+    }) 
+    defaultInput.addEventListener("click", this.defaultListener) 
   },
 
-  unmounted(){
-    (this.$refs.label as Array<HTMLLabelElement>).forEach(label => {
-      label.removeEventListener('click', this.labelListener)
+  unmounted() {
+    (this.$refs.label as Array<HTMLLabelElement>).forEach((label) => {
+      label.removeEventListener("click", this.labelListener) 
     }),
-
-    (this.$refs.input as Array<HTMLInputElement>).forEach(input => {
-      input.removeEventListener('click', this.inputListener)
-    }),
-
-    (this.$refs.title as HTMLDivElement).removeEventListener('click', this.titleListener),
-
-    (this.$refs.default as HTMLInputElement).removeEventListener('click', this.defaultListener)
-  }
-};
+      (this.$refs.input as Array<HTMLInputElement>).forEach((input) => {
+        input.removeEventListener("click", this.inputListener) 
+      }),
+      (this.$refs.title as HTMLDivElement).removeEventListener(
+        "click",
+        this.titleListener
+      ),
+      (this.$refs.default as HTMLInputElement).removeEventListener(
+        "click",
+        this.defaultListener
+      ) 
+  },
+} 
 </script>
 
 <template>
@@ -127,6 +126,7 @@ export default {
           name="singleSelect"
           checked
           ref="default"
+          value="default"
         />
         <label
           :for="default"
@@ -142,6 +142,7 @@ export default {
             type="radio"
             name="singleSelect"
             ref="input"
+            :value="option"
           />
           <label
             :for="option"
@@ -161,7 +162,7 @@ export default {
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px
+  gap: 10px;
 }
 
 *,

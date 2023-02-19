@@ -1,10 +1,10 @@
 import axios from "axios"
 
 class Companies {
- create(access_token: string){
-  axios({
+ async create(access_token: string){
+  const response = await axios({
    method: 'post',
-   url: 'http://127.0.0.1:1234/full',
+   url: 'http://127.0.0.1:1234/full/companies',
    headers: {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${access_token}`
@@ -13,6 +13,8 @@ class Companies {
     name: 'Yana'
    }]
   })
+
+  return response.data._embedded.companies
  }
 }
 
